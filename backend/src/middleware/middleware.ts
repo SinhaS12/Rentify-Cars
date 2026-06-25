@@ -12,7 +12,7 @@ const JWT_SECRET=process.env.JWT_SECRET;
 declare global{
     namespace Express{
         interface Request{
-            username:string
+            id:string
         }
     }
 }
@@ -34,7 +34,7 @@ export function Middleware(req:Request,res:Response,next:NextFunction){
                 message:"Jwt verify failed please check the token"
             })
         }
-        req.username=decode.username;
+        req.id=decode.id;
         next();
     }catch(error){
         return res.status(500).json({

@@ -1,11 +1,11 @@
 dotenv.config();
 import dotenv from 'dotenv'
 import express from 'express';
-import { signup_val } from '../validation/signup';
-import { signin_val } from '../validation/signin';
+import { signup_val } from '../validation/signup.ts';
+import { signin_val } from '../validation/signin.ts';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {prisma} from '../db';
+import {prisma} from '../db.ts';
 import { error } from 'node:console';
 const router = express.Router();
 
@@ -40,10 +40,11 @@ router.post("/signup", async (req, res) => {
                 password:hash
             },
             select:{
+                id:true,
                 username:true
             }
         })
-        const token=jwt.sign({userId:new_user},JWT_SECRET);
+        const token=jwt.sign({userId:new_user.id},JWT_SECRET);
         return res.status(200).json({
             success:true,
             message:"Signup Successfully Done",
@@ -85,7 +86,7 @@ router.post("/login", async (req, res) => {
                 message:"Password Incorrect Please Check"
             })
         }
-        const token=jwt.sign({username:username},JWT_SECRET);
+        const token=jwt.sign({userId:find_exist.id},JWT_SECRET);
         return res.status(200).json({
             success:true,
             message:"Signin Successfully Done",
